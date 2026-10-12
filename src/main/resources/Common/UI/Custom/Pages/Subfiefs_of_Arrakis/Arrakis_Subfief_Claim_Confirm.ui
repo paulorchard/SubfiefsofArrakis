@@ -1,0 +1,55 @@
+$C = "../../Common.ui";
+$Sounds = "../../Sounds.ui";
+
+$C.@PageOverlay {
+  LayoutMode: Middle;
+
+  $C.@DecoratedContainer {
+    Anchor: (Width: 520);
+
+    #Title {
+      $C.@Title {
+        @Text = %server.customUI.arrakisSubfiefClaim.title;
+      }
+    }
+
+    #Content {
+      LayoutMode: Top;
+      Padding: (Full: 20);
+
+      Label #Question {
+        Anchor: (Bottom: 10, Horizontal: 8);
+        Style: (...$C.@DefaultLabelStyle, HorizontalAlignment: Center, FontSize: 28, TextColor: #ffcc00);
+      }
+
+      Label #Location {
+        Anchor: (Bottom: 10, Horizontal: 8);
+        Style: (...$C.@DefaultLabelStyle, HorizontalAlignment: Center, FontSize: 16);
+      }
+
+      Label #Warning {
+        Anchor: (Bottom: 16, Horizontal: 8);
+        Style: (...$C.@DefaultLabelStyle, HorizontalAlignment: Center, Wrap: true, FontSize: 14, TextColor: #e8a13a);
+      }
+
+      Group {
+        LayoutMode: Center;
+        Anchor: (Top: 8);
+
+        $C.@TextButton #ConfirmButton {
+          @Sounds = $Sounds.@SaveSettings;
+          @Anchor = (Width: 170, Right: 6);
+          Text: %server.customUI.arrakisSubfiefClaim.confirm;
+        }
+
+        $C.@SecondaryTextButton #CancelButton {
+          @Sounds = $Sounds.@ButtonsCancel;
+          @Anchor = (Width: 170, Left: 6);
+          Text: %server.customUI.arrakisSubfiefClaim.cancel;
+        }
+      }
+    }
+  }
+}
+
+$C.@BackButton {}

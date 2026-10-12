@@ -1,0 +1,17 @@
+{
+  "Group": "IslandCraft",
+  "Name": "IslandCraft - Subfiefs of Arrakis",
+  "Version": "0.1.0",
+  "Description": "Claim a chunk of Arrakis with a statue. Only you may build, break or open things inside it.",
+  "Authors": [
+    {
+      "Name": "paulo"
+    }
+  ],
+  "ServerVersion": "*",
+  "Main": "com.paulorchard.islandcraft.subfiefsofarrakis.SubfiefsOfArrakisPlugin",
+  "Dependencies": {},
+  "OptionalDependencies": {},
+  "DisabledByDefault": false,
+  "IncludesAssetPack": true
+}
