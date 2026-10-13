@@ -49,15 +49,14 @@ public final class ClaimMarkers {
             return;
         }
         long index = ChunkUtil.indexChunk(claim.chunkX(), claim.chunkZ());
-        world.getNonTickingChunkAsync(index).whenComplete((WorldChunk chunk, Throwable error) -> {
-            if (error != null || chunk == null) {
+        world.getChunkStore().getChunkReferenceAsync(index).whenComplete((Ref<ChunkStore> ref, Throwable error) -> {
+            if (error != null || ref == null) {
                 LOGGER.at(Level.WARNING).log("Could not reach chunk %d, %d in %s to update its claim marker",
                         claim.chunkX(), claim.chunkZ(), claim.world());
                 return;
             }
             world.execute(() -> {
-                Ref<ChunkStore> ref = chunk.getReference();
-                if (ref == null || !ref.isValid()) {
+                if (!ref.isValid()) {
                     return;
                 }
                 Store<ChunkStore> store = world.getChunkStore().getStore();
@@ -66,7 +65,10 @@ public final class ClaimMarkers {
                 } else {
                     store.tryRemoveComponent(ref, type);
                 }
-                chunk.markNeedsSaving();
+                WorldChunk chunk = store.getComponent(ref, WorldChunk.getComponentType());
+                if (chunk != null) {
+                    chunk.markNeedsSaving();
+                }
             });
         });
     }

@@ -54,8 +54,8 @@ public class SubfiefsConfig {
     private double messageCooldownSeconds = 3.0;
     private boolean entryTitles = true;
     private boolean borderParticles = true;
-    private String borderParticleId = "Dust_Sparkles_Fine";
-    private double borderDistance = 4.0;
+    private String borderParticleId = "Arrakis_Subfief_Border";
+    private double borderDistance = 32.0;
 
     public String getClaimCost() {
         return claimCost;

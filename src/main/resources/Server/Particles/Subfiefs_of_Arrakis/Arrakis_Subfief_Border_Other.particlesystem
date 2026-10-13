@@ -1,0 +1,9 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Arrakis_Subfief_Border_Other"
+    }
+  ],
+  "CullDistance": 80.0,
+  "BoundingRadius": 4.0
+}

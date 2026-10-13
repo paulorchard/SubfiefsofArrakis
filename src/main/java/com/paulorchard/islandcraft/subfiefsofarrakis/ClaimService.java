@@ -10,7 +10,6 @@ import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.joml.Vector3i;
 
@@ -160,13 +159,13 @@ public class ClaimService {
     /** Clears the block the statue was placed as, without the item drop breaking it would give. */
     private static void removeStatue(Pending entry) {
         entry.world().execute(() -> {
-            WorldChunk chunk = entry.world().getChunkIfLoaded(ChunkUtil.indexChunk(entry.chunkX(), entry.chunkZ()));
-            if (chunk == null) {
+            WorldAccess access = new WorldAccess(entry.world());
+            if (!access.isLoaded(entry.x(), entry.z())) {
                 return;
             }
-            BlockType type = chunk.getBlockType(entry.x(), entry.y(), entry.z());
+            BlockType type = access.blockType(entry.x(), entry.y(), entry.z());
             if (type != null && SubfiefsOfArrakisPlugin.statueBlockId().equals(type.getId())) {
-                chunk.setBlock(entry.x(), entry.y(), entry.z(), "Empty");
+                access.setBlock(entry.x(), entry.y(), entry.z(), "Empty", 0);
             }
         });
     }

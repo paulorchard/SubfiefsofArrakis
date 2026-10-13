@@ -5,7 +5,7 @@
 group = "com.paulorchard.islandcraft"
 version = "0.1.0"
 
-val hytaleServerVersion = "0.6.8"
+val hytaleServerVersion = "0.7.0"
 val modsDir = file("${System.getenv("APPDATA")}/Hytale/UserData/Mods")
 
 repositories {

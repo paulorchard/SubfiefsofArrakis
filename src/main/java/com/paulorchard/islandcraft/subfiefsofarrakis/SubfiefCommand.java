@@ -14,6 +14,7 @@ import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.joml.Vector3d;
 
@@ -25,6 +26,7 @@ import java.util.List;
  * /subfief give [player]      a claim statue (permission islandcraft.subfiefs.give)
  * /subfief release name       free someone's claim (permission islandcraft.subfiefs.admin)
  * /subfief list               every claim (permission islandcraft.subfiefs.admin)
+ * /subfief marker             whether the chunk you stand in carries the claim marker (permission islandcraft.subfiefs.admin)
  */
 public class SubfiefCommand extends AbstractPlayerCommand {
 
@@ -41,6 +43,7 @@ public class SubfiefCommand extends AbstractPlayerCommand {
         addSubCommand(new GiveCommand());
         addSubCommand(new ReleaseCommand(service));
         addSubCommand(new ListCommand(registry));
+        addSubCommand(new MarkerCommand());
     }
 
     @Override
@@ -166,6 +169,36 @@ public class SubfiefCommand extends AbstractPlayerCommand {
                         .param("world", claim.world()).param("x", claim.chunkX()).param("z", claim.chunkZ())
                         .param("time", claim.claimedAt().toString()));
             }
+        }
+    }
+
+    /** Read-only check of the marker component on the chunk the caller stands in. */
+    private static class MarkerCommand extends AbstractPlayerCommand {
+
+        MarkerCommand() {
+            super("marker", LANG + "marker.desc");
+            requirePermission(ADMIN_PERMISSION);
+        }
+
+        @Override
+        protected void execute(CommandContext context, Store<EntityStore> store, Ref<EntityStore> ref,
+                               PlayerRef playerRef, World world) {
+            TransformComponent transform = store.getComponent(ref, TransformComponent.getComponentType());
+            if (transform == null || ClaimMarkers.type() == null) {
+                return;
+            }
+            int chunkX = ChunkUtil.chunkCoordinate(transform.getPosition().x());
+            int chunkZ = ChunkUtil.chunkCoordinate(transform.getPosition().z());
+            Ref<ChunkStore> column = world.getChunkStore().getChunkReference(ChunkUtil.indexChunk(chunkX, chunkZ));
+            ClaimMarkerComponent marker = column == null || !column.isValid() ? null
+                    : world.getChunkStore().getStore().getComponent(column, ClaimMarkers.type());
+            if (marker == null) {
+                context.sendMessage(Message.translation(LANG + "marker.none").param("x", chunkX).param("z", chunkZ));
+                return;
+            }
+            context.sendMessage(Message.translation(LANG + "marker.found").param("x", chunkX).param("z", chunkZ)
+                    .param("owner", String.valueOf(marker.getOwner()))
+                    .param("time", String.valueOf(marker.getClaimedAt())));
         }
     }
 }

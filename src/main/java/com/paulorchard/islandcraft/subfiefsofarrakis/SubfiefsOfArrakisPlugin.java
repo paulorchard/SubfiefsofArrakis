@@ -88,7 +88,7 @@ public class SubfiefsOfArrakisPlugin extends JavaPlugin {
     /** Assets are loaded by now, so say at once if one this mod relies on is missing. */
     @Override
     protected void start() {
-        String particle = config.get().getBorderParticleId();
+        String particle = config.get().getBorderParticleId() + "_Own";
         particleAvailable = ParticleSystem.getAssetMap().getAsset(particle) != null;
         if (config.get().isBorderParticles() && !particleAvailable) {
             getLogger().at(Level.WARNING).log("Border particle '%s' does not exist, so no borders are drawn", particle);
